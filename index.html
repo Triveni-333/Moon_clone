@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunrise Transition</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+        }
+
+        /* The Sky Background */
+        .sky {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at bottom, #0a0a2a, black);
+            transition: background 10s linear; /* Smooth transition effect */
+        }
+
+        /* Moon Styling */
+        .moon {
+            position: absolute;
+            top: 35%;
+            left: -100px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 30% 30%, #fff, #ccc, #aaa);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 255, 200, 0.5);
+            animation: moveMoon 10s linear infinite;
+            transition: opacity 5s ease-in-out; /* Fades out during sunrise */
+        }
+
+        /* Sun Styling (Initially Hidden) */
+        .sun {
+            position: absolute;
+            bottom: -100px; /* Starts below the screen */
+            left: 50%;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle at 30% 30%, #ffdd44, #ff9900, #ff6600);
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(255, 170, 0, 0.8);
+            transform: translateX(-50%);
+            transition: bottom 8s ease-in-out; /* Sun rises smoothly */
+        }
+
+        /* Stars in the Background */
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite alternate;
+            transition: opacity 5s ease-in-out; /* Stars fade out during sunrise */
+        }
+
+        /* Twinkling Animation */
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Orbiting Stars */
+        .orbit-container {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            animation: moveMoon 10s linear infinite;
+        }
+
+        .orbit-star {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: white;
+            box-shadow: 0 0 10px white;
+            border-radius: 50%;
+        }
+
+        /* Rotation Animation */
+        @keyframes orbit {
+            0% { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+        }
+
+        .orbiting {
+            animation: orbit 4s linear infinite;
+        }
+
+        .orbiting.reverse {
+            animation-direction: reverse;
+        }
+
+        /* Moon Movement */
+        @keyframes moveMoon {
+            0% { left: -100px; }
+            100% { left: 110vw; }
+        }
+
+        /* Sunrise Effect */
+        .sunrise {
+            background: linear-gradient(to top, #ffcc33, #ff9966, #663399, #0a0a2a);
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="sky" id="sky"></div>
+
+    <!-- Moon -->
+    <div class="moon" id="moon"></div>
+
+    <!-- Sun (Initially Hidden) -->
+    <div class="sun" id="sun"></div>
+
+    <!-- Orbiting Stars -->
+    <div class="orbit-container" id="orbitContainer">
+        <div class="orbit-star orbiting" id="star1"></div>
+        <div class="orbit-star orbiting reverse" id="star2"></div>
+    </div>
+
+    <script>
+        const sky = document.getElementById("sky");
+        const moon = document.getElementById("moon");
+        const sun = document.getElementById("sun");
+
+        // Function to create stars in the background
+        function createStar() {
+            const star = document.createElement("div");
+            star.classList.add("star");
+
+            // Random position
+            star.style.top = Math.random() * window.innerHeight + "px";
+            star.style.left = Math.random() * window.innerWidth + "px";
+
+            // Random animation delay for twinkle effect
+            star.style.animationDelay = Math.random() * 3 + "s";
+
+            sky.appendChild(star);
+        }
+
+        // Generate multiple stars
+        for (let i = 0; i < 150; i++) {
+            createStar();
+        }
+
+        // Function to trigger sunrise
+        function triggerSunrise() {
+            // Change the sky to sunrise colors
+            sky.classList.add("sunrise");
+
+            // Fade out the moon
+            moon.style.opacity = "0";
+
+            // Fade out stars
+            document.querySelectorAll(".star").forEach(star => {
+                star.style.opacity = "0";
+            });
+
+            // Make the sun rise
+            sun.style.bottom = "30%"; // Moves sun up to the sky
+        }
+
+        // Trigger sunrise after 10 seconds
+        setTimeout(triggerSunrise, 10000);
+    </script>
+</body>
+</html>
